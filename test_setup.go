@@ -13,6 +13,9 @@ import (
 func setup(*testing.M) {
 	fs := afero.NewOsFs()
 
+	ignore(fs.Remove("resources/fixtures/data/case11/foo/bar"))
+	ignore(fs.Remove("resources/fixtures/data/case03/case01"))
+
 	must(fs.MkdirAll("resources/test/data.copy", os.ModePerm))
 	must(fs.Chmod("resources/fixtures/data/case07/dir_0555", 0555))
 	must(fs.Chmod("resources/fixtures/data/case07/file_0444", 0444))

@@ -5,3 +5,5 @@ func must(err error) {
 		panic(err)
 	}
 }
+
+func ignore(error) {}

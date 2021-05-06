@@ -272,7 +272,7 @@ func assure(src, dest string, opts ...Options) Options {
 	}
 
 	if opts[0].DestFs == nil {
-		opts[0].DestFs = defaults.DestFs
+		opts[0].DestFs = opts[0].SrcFs
 	}
 
 	if opts[0].OnSymlink == nil {

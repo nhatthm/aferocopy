@@ -33,6 +33,7 @@ linters:
     - ifshort
     - testpackage
     - gci
+    - unconvert
 
 issues:
   exclude-use-default: false
@@ -45,3 +46,12 @@ issues:
         - funlen
         - dupl
       path: "_test.go"
+
+    - linters:
+        - gomnd
+        - goconst
+        - goerr113
+        - noctx
+        - funlen
+        - dupl
+      path: "example_test.go"

@@ -31,7 +31,7 @@ func ExampleOptions() {
 			OnSymlink: func(srcFs afero.Fs, src string) SymlinkAction {
 				return Skip
 			},
-			AddPermission: 0200,
+			AddPermission: 0o200,
 		},
 	)
 	fmt.Println("Error:", err)

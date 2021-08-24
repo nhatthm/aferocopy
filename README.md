@@ -13,7 +13,7 @@ The idea and logic is ported from [otiai10/copy](https://github.com/otiai10/copy
 
 ## Prerequisites
 
-- `Go >= 1.15`
+- `Go >= 1.16`
 
 ## Install
 

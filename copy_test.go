@@ -70,7 +70,7 @@ func TestCopy(t *testing.T) {
 		src := "resources/fixtures/data/case05"
 		dest := "resources/test/data.copy/case05"
 
-		err := os.Chmod(src, os.FileMode(0555))
+		err := os.Chmod(src, os.FileMode(0o555))
 		assert.NoError(t, err)
 
 		err = Copy(src, dest)
@@ -79,9 +79,9 @@ func TestCopy(t *testing.T) {
 		info, err := os.Lstat(dest)
 		assert.NoError(t, err)
 
-		assert.Equal(t, os.FileMode(0555), info.Mode().Perm())
+		assert.Equal(t, os.FileMode(0o555), info.Mode().Perm())
 
-		err = os.Chmod(dest, 0755) // nolint: gosec
+		err = os.Chmod(dest, 0o755) // nolint: gosec
 		assert.NoError(t, err)
 	})
 }
@@ -99,7 +99,7 @@ func TestCopy_NamedPipe(t *testing.T) {
 		info, err := os.Lstat("resources/fixtures/data/case11/foo/bar")
 		assert.NoError(t, err)
 		assert.NotEqual(t, 0, info.Mode()&os.ModeNamedPipe)
-		assert.Equal(t, os.FileMode(0555), info.Mode().Perm())
+		assert.Equal(t, os.FileMode(0o555), info.Mode().Perm())
 	})
 
 	t.Run("specified src is a named pipe", func(t *testing.T) {
@@ -110,7 +110,7 @@ func TestCopy_NamedPipe(t *testing.T) {
 		info, err := os.Lstat(dest)
 		assert.NoError(t, err)
 		assert.NotEqual(t, 0, info.Mode()&os.ModeNamedPipe)
-		assert.Equal(t, os.FileMode(0555), info.Mode().Perm())
+		assert.Equal(t, os.FileMode(0o555), info.Mode().Perm())
 	})
 }
 
@@ -217,23 +217,23 @@ func TestOptions_Skip(t *testing.T) {
 func TestOptions_AddPermission(t *testing.T) {
 	info, err := os.Stat("resources/fixtures/data/case07/dir_0555")
 	assert.NoError(t, err)
-	assert.Equal(t, os.FileMode(0555)|os.ModeDir, info.Mode())
+	assert.Equal(t, os.FileMode(0o555)|os.ModeDir, info.Mode())
 
 	info, err = os.Stat("resources/fixtures/data/case07/file_0444")
 	assert.NoError(t, err)
-	assert.Equal(t, os.FileMode(0444), info.Mode())
+	assert.Equal(t, os.FileMode(0o444), info.Mode())
 
-	opt := Options{AddPermission: 0222}
+	opt := Options{AddPermission: 0o222}
 	err = Copy("resources/fixtures/data/case07", "resources/test/data.copy/case07", opt)
 	assert.NoError(t, err)
 
 	info, err = os.Stat("resources/test/data.copy/case07/dir_0555")
 	assert.NoError(t, err)
-	assert.Equal(t, os.FileMode(0555|0222)|os.ModeDir, info.Mode())
+	assert.Equal(t, os.FileMode(0o555|0o222)|os.ModeDir, info.Mode())
 
 	info, err = os.Stat("resources/test/data.copy/case07/file_0444")
 	assert.NoError(t, err)
-	assert.Equal(t, os.FileMode(0444|0222), info.Mode())
+	assert.Equal(t, os.FileMode(0o444|0o222), info.Mode())
 }
 
 // nolint: godox

@@ -13,7 +13,7 @@ const (
 	// tmpPermissionForDirectory makes the destination directory writable,
 	// so that stuff can be copied recursively even if any original directory is NOT writable.
 	// See https://github.com/otiai10/copy/pull/9 for more information.
-	tmpPermissionForDirectory = os.FileMode(0755)
+	tmpPermissionForDirectory = os.FileMode(0o755)
 )
 
 type timeSpec struct {

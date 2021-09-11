@@ -24,7 +24,7 @@ go get github.com/nhatthm/aferocopy
 ## Usage
 
 ```go
-err := aferpcopy.Copy("your/directory", "your/directory.copy")
+err := aferocopy.Copy("your/directory", "your/directory.copy")
 ```
 ## Advanced Usage
 

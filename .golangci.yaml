@@ -36,6 +36,7 @@ linters:
     - testpackage
     - unconvert
     - wrapcheck
+    - varnamelen
 
 issues:
   exclude-use-default: false

@@ -64,12 +64,10 @@ func switchboard(src, dest string, info os.FileInfo, opt Options) (err error) {
 	return err
 }
 
-// copy decide if this src should be copied or not.
+// copyNextOrSkip decide if this src should be copied or not.
 // Because this "copy" could be called recursively,
 // "info" MUST be given here, NOT nil.
-// nolint: predeclared
-//goland:noinspection GoReservedWordUsedAsName
-func copy(src, dest string, info os.FileInfo, opt Options) error {
+func copyNextOrSkip(src, dest string, info os.FileInfo, opt Options) error {
 	skip, err := opt.Skip(opt.SrcFs, src)
 	if err != nil {
 		return err
@@ -85,6 +83,7 @@ func copy(src, dest string, info os.FileInfo, opt Options) error {
 // copyFile is for just a file,
 // with considering existence of parent directory
 // and file permission.
+// nolint: cyclop
 func copyFile(src, dest string, info os.FileInfo, opt Options) (err error) {
 	srcFs := opt.SrcFs
 	destFs := opt.DestFs
@@ -111,16 +110,35 @@ func copyFile(src, dest string, info os.FileInfo, opt Options) (err error) {
 
 	defer closeFile(s, &err)
 
-	if _, err = io.Copy(f, s); err != nil {
-		return
+	var (
+		buf []byte
+		w   io.Writer = f
+	)
+
+	if opt.CopyBufferSize != 0 {
+		buf = make([]byte, opt.CopyBufferSize)
+		// Disable using `ReadFrom` by io.CopyBuffer.
+		w = struct{ io.Writer }{f}
+	}
+
+	if _, err = io.CopyBuffer(w, s, buf); err != nil {
+		return err
 	}
 
 	if opt.Sync {
 		err = f.Sync()
 	}
 
+	if opt.PreserveOwner {
+		if err := preserveOwner(srcFs, src, destFs, dest, info); err != nil {
+			return err
+		}
+	}
+
 	if opt.PreserveTimes {
-		return preserveTimes(info, destFs, dest)
+		if err := preserveTimes(info, destFs, dest); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -157,6 +175,7 @@ func checkDir(srcDir, destDir string, opt Options) (exit bool, err error) {
 // copyDir is for a directory,
 // with scanning contents inside the directory
 // and pass everything to "copy" recursively.
+// nolint: cyclop
 func copyDir(srcDir, destDir string, info os.FileInfo, opt Options) (err error) {
 	srcFs := opt.SrcFs
 	destFs := opt.DestFs
@@ -183,14 +202,22 @@ func copyDir(srcDir, destDir string, info os.FileInfo, opt Options) (err error) 
 	for _, content := range contents {
 		cs, cd := filepath.Join(srcDir, content.Name()), filepath.Join(destDir, content.Name())
 
-		if err = copy(cs, cd, content, opt); err != nil {
+		if err = copyNextOrSkip(cs, cd, content, opt); err != nil {
 			// If any error, exit immediately.
 			return
 		}
 	}
 
+	if opt.PreserveOwner {
+		if err := preserveOwner(srcFs, srcDir, destFs, destDir, info); err != nil {
+			return err
+		}
+	}
+
 	if opt.PreserveTimes {
-		return preserveTimes(info, destFs, destDir)
+		if err := preserveTimes(info, destFs, destDir); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -217,7 +244,7 @@ func onSymlink(src, dest string, opt Options) error {
 			return err
 		}
 
-		return copy(orig, dest, info, opt)
+		return copyNextOrSkip(orig, dest, info, opt)
 
 	case Skip:
 		fallthrough

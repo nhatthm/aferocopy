@@ -37,6 +37,11 @@ func TestCopy(t *testing.T) {
 	t.Run("specified src is just a file", func(t *testing.T) {
 		err := Copy("resources/fixtures/data/case01/README.md", "resources/test/data.copy/case01/README.md")
 		assert.NoError(t, err)
+
+		content, err := ioutil.ReadFile("resources/test/data.copy/case01/README.md")
+
+		assert.NoError(t, err)
+		assert.Equal(t, "case01 - README.md", string(content))
 	})
 
 	t.Run("source directory includes symbolic link", func(t *testing.T) {
@@ -345,4 +350,28 @@ func TestOptions_OnDirExists(t *testing.T) {
 		err := Copy("resources/fixtures/data/case10/src", "resources/test/data.copy/case10/dest.3", opt)
 		assert.NoError(t, err)
 	})
+}
+
+func TestOptions_CopyBufferSize(t *testing.T) {
+	opt := Options{
+		CopyBufferSize: 512,
+	}
+
+	err := Copy("resources/fixtures/data/case12", "resources/test/data.copy/case12", opt)
+
+	assert.NoError(t, err)
+
+	content, err := ioutil.ReadFile("resources/test/data.copy/case12/README.md")
+
+	assert.NoError(t, err)
+	assert.Equal(t, "case12 - README.md", string(content))
+}
+
+func TestOptions_PreserveOwner(t *testing.T) {
+	opt := Options{
+		PreserveOwner: true,
+	}
+
+	err := Copy("resources/fixtures/data/case13", "resources/test/data.copy/case13", opt)
+	assert.NoError(t, err)
 }

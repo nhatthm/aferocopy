@@ -27,6 +27,7 @@ func TestCopy(t *testing.T) {
 
 	info, err := os.Stat("./resources/test/data.copy/case00/README.md")
 	require.NoError(t, err)
+	assert.NotNil(t, info)
 	assert.False(t, info.IsDir())
 
 	t.Run("specified src does not exist", func(t *testing.T) {
@@ -92,7 +93,7 @@ func TestCopy(t *testing.T) {
 }
 
 func TestCopy_NamedPipe(t *testing.T) {
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == "windows" || runtime.GOOS == "js" {
 		t.Skip("See https://github.com/otiai10/copy/issues/47")
 	}
 
@@ -219,7 +220,7 @@ func TestOptions_Skip(t *testing.T) {
 	})
 }
 
-func TestOptions_AddPermission(t *testing.T) {
+func TestOptions_PermissionControl(t *testing.T) {
 	info, err := os.Stat("resources/fixtures/data/case07/dir_0555")
 	assert.NoError(t, err)
 	assert.Equal(t, os.FileMode(0o555)|os.ModeDir, info.Mode())
@@ -228,7 +229,7 @@ func TestOptions_AddPermission(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, os.FileMode(0o444), info.Mode())
 
-	opt := Options{AddPermission: 0o222}
+	opt := Options{PermissionControl: AddPermission(0o222)}
 	err = Copy("resources/fixtures/data/case07", "resources/test/data.copy/case07", opt)
 	assert.NoError(t, err)
 

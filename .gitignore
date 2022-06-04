@@ -15,4 +15,4 @@
 /vendor
 
 *.coverprofile
-/resources/test
+resources/test

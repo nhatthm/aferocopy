@@ -24,7 +24,23 @@ go get github.com/nhatthm/aferocopy
 ## Usage
 
 ```go
-err := aferocopy.Copy("your/directory", "your/directory.copy")
+package main
+
+import (
+	"fmt"
+
+	"github.com/nhatthm/aferocopy"
+)
+
+func main() {
+	err := aferocopy.Copy("your/src", "your/dest", aferocopy.Options{
+		// Specify the source and destination fs of your choice, default is afero.OsFs.
+		// SrcFs: ...,
+		// DestFs: ...,
+    })
+	
+	fmt.Println(err) // nil
+}
 ```
 ## Advanced Usage
 
@@ -46,9 +62,18 @@ type Options struct {
 	// Skip can specify which files should be skipped
 	Skip func(src string) (bool, error)
 
-	// AddPermission to every entry,
-	// NO MORE THAN 0777
-	AddPermission os.FileMode
+	// PermissionControl can control permission of
+	// every entry.
+	// When you want to add permission 0222, do like
+	//
+	//		PermissionControl = AddPermission(0222)
+	//
+	// or if you even don't want to touch permission,
+	//
+	//		PermissionControl = DoNothing
+	//
+	// By default, PermissionControl = PreservePermission
+	PermissionControl PermissionControlFunc
 
 	// Sync file after copy.
 	// Useful in case when file must be on the disk
@@ -71,13 +96,24 @@ type Options struct {
 ```
 
 ```go
-// For example...
-opt := Options{
-	Skip: func(src string) (bool, error) {
-		return strings.HasSuffix(src, ".git"), nil
-	},
+package main
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/nhatthm/aferocopy"
+)
+
+func main() {
+	err := aferocopy.Copy("your/src", "your/dest", aferocopy.Options{
+		Skip: func(src string) (bool, error) {
+			return strings.HasSuffix(src, ".git"), nil
+		},
+	})
+
+	fmt.Println(err) // nil
 }
-err := Copy("your/directory", "your/directory.copy", opt)
 ```
 
 ## Donation

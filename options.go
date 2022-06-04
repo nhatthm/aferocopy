@@ -25,7 +25,22 @@ type Options struct {
 
 	// AddPermission to every entities,
 	// NO MORE THAN 0777
+	//
+	// Deprecated: use PermissionControl instead, for example: `PermissionControl: AddPermission(perm)`.
 	AddPermission os.FileMode
+
+	// PermissionControl can control permission of
+	// every entry.
+	// When you want to add permission 0222, do like
+	//
+	//		PermissionControl = AddPermission(0222)
+	//
+	// or if you even don't want to touch permission,
+	//
+	//		PermissionControl = DoNothing
+	//
+	// By default, PermissionControl = PreservePermission
+	PermissionControl PermissionControlFunc
 
 	// Sync file after copy.
 	// Useful in case when file must be on the disk
@@ -86,13 +101,53 @@ func getDefaultOptions(src, dest string) Options {
 		Skip: func(afero.Fs, string) (bool, error) {
 			return false, nil // Don't skip
 		},
-		AddPermission:  0,     // Add nothing
-		Sync:           false, // Do not sync
-		PreserveTimes:  false, // Do not preserve the modification time
-		CopyBufferSize: 0,     // Do not specify, use default bufsize (32*1024)
+		AddPermission:     0,                  // Add nothing
+		PermissionControl: PreservePermission, // Just preserve permission
+		Sync:              false,              // Do not sync
+		PreserveTimes:     false,              // Do not preserve the modification time
+		CopyBufferSize:    0,                  // Do not specify, use default bufsize (32*1024)
 		intent: struct {
 			src  string
 			dest string
 		}{src, dest},
 	}
+}
+
+// assureOptions assures Options struct, should be called only once.
+// All optional values MUST NOT BE nil/zero after assured.
+func assureOptions(src, dest string, opts ...Options) Options {
+	defaults := getDefaultOptions(src, dest)
+	defaults.SrcFs = afero.NewOsFs()
+	defaults.DestFs = defaults.SrcFs
+
+	if len(opts) == 0 {
+		return defaults
+	}
+
+	if opts[0].SrcFs == nil {
+		opts[0].SrcFs = defaults.SrcFs
+	}
+
+	if opts[0].DestFs == nil {
+		opts[0].DestFs = opts[0].SrcFs
+	}
+
+	if opts[0].OnSymlink == nil {
+		opts[0].OnSymlink = defaults.OnSymlink
+	}
+
+	if opts[0].Skip == nil {
+		opts[0].Skip = defaults.Skip
+	}
+
+	if opts[0].AddPermission > 0 {
+		opts[0].PermissionControl = AddPermission(opts[0].AddPermission)
+	} else if opts[0].PermissionControl == nil {
+		opts[0].PermissionControl = PreservePermission
+	}
+
+	opts[0].intent.src = defaults.intent.src
+	opts[0].intent.dest = defaults.intent.dest
+
+	return opts[0]
 }

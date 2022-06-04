@@ -9,13 +9,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-const (
-	// tmpPermissionForDirectory makes the destination directory writable,
-	// so that stuff can be copied recursively even if any original directory is NOT writable.
-	// See https://github.com/otiai10/copy/pull/9 for more information.
-	tmpPermissionForDirectory = os.FileMode(0o755)
-)
-
 type timeSpec struct {
 	Mtime time.Time
 	Atime time.Time
@@ -24,7 +17,7 @@ type timeSpec struct {
 
 // Copy copies src to dest, doesn't matter if src is a directory or a file.
 func Copy(src, dest string, opt ...Options) error {
-	o := assure(src, dest, opt...)
+	o := assureOptions(src, dest, opt...)
 
 	info, err := stat(o.SrcFs, src)
 	if err != nil {
@@ -46,22 +39,20 @@ func stat(fs afero.Fs, path string) (os.FileInfo, error) {
 
 // switchboard switches proper copy functions regarding file type, etc...
 // If there would be anything else here, add a case to this switchboard.
-func switchboard(src, dest string, info os.FileInfo, opt Options) (err error) {
+func switchboard(src, dest string, info os.FileInfo, opt Options) error {
 	switch {
 	case info.Mode()&os.ModeSymlink != 0:
-		err = onSymlink(src, dest, opt)
+		return onSymlink(src, dest, opt)
 
 	case info.IsDir():
-		err = copyDir(src, dest, info, opt)
+		return copyDir(src, dest, info, opt)
 
 	case info.Mode()&os.ModeNamedPipe != 0:
-		err = copyPipe(opt.DestFs, dest, info)
+		return copyPipe(opt.DestFs, dest, info)
 
 	default:
-		err = copyFile(src, dest, info, opt)
+		return copyFile(src, dest, info, opt)
 	}
-
-	return err
 }
 
 // copyNextOrSkip decide if this src should be copied or not.
@@ -99,9 +90,12 @@ func copyFile(src, dest string, info os.FileInfo, opt Options) (err error) {
 
 	defer closeFile(f, &err)
 
-	if err = destFs.Chmod(f.Name(), info.Mode()|opt.AddPermission); err != nil {
-		return
+	chmod, err := opt.PermissionControl(info, destFs, dest)
+	if err != nil {
+		return err
 	}
+
+	chmod(&err)
 
 	s, err := srcFs.Open(src)
 	if err != nil {
@@ -185,14 +179,12 @@ func copyDir(srcDir, destDir string, info os.FileInfo, opt Options) (err error) 
 		return err
 	}
 
-	originalMode := info.Mode()
-
-	// Make dest dir with 0755 so that everything writable.
-	if err = destFs.MkdirAll(destDir, tmpPermissionForDirectory); err != nil {
-		return
+	chmod, err := opt.PermissionControl(info, destFs, destDir)
+	if err != nil {
+		return err
 	}
-	// Recover dir mode with original one.
-	defer chmod(destFs, destDir, originalMode|opt.AddPermission, &err)
+
+	defer chmod(&err)
 
 	contents, err := afero.ReadDir(srcFs, srcDir)
 	if err != nil {
@@ -272,46 +264,4 @@ func closeFile(f afero.File, reported *error) {
 	if err := f.Close(); *reported == nil {
 		*reported = err
 	}
-}
-
-// chmod ANYHOW changes file mode,
-// with assigning error raised during Chmod,
-// BUT respecting the error already reported.
-func chmod(fs afero.Fs, dir string, mode os.FileMode, reported *error) {
-	if err := fs.Chmod(dir, mode); *reported == nil {
-		*reported = err
-	}
-}
-
-// assure Options struct, should be called only once.
-// All optional values MUST NOT BE nil/zero after assured.
-func assure(src, dest string, opts ...Options) Options {
-	defaults := getDefaultOptions(src, dest)
-	defaults.SrcFs = afero.NewOsFs()
-	defaults.DestFs = defaults.SrcFs
-
-	if len(opts) == 0 {
-		return defaults
-	}
-
-	if opts[0].SrcFs == nil {
-		opts[0].SrcFs = defaults.SrcFs
-	}
-
-	if opts[0].DestFs == nil {
-		opts[0].DestFs = opts[0].SrcFs
-	}
-
-	if opts[0].OnSymlink == nil {
-		opts[0].OnSymlink = defaults.OnSymlink
-	}
-
-	if opts[0].Skip == nil {
-		opts[0].Skip = defaults.Skip
-	}
-
-	opts[0].intent.src = defaults.intent.src
-	opts[0].intent.dest = defaults.intent.dest
-
-	return opts[0]
 }

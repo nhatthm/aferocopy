@@ -21,6 +21,7 @@ linters:
   enable-all: true
   disable:
     - exhaustivestruct
+    - exhaustruct
     - forbidigo
     - forcetypeassert
     - gci
@@ -31,6 +32,7 @@ linters:
     - interfacer
     - lll
     - maligned
+    - nonamedreturns
     - paralleltest
     - scopelint
     - testpackage

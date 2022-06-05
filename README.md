@@ -37,8 +37,8 @@ func main() {
 		// Specify the source and destination fs of your choice, default is afero.OsFs.
 		// SrcFs: ...,
 		// DestFs: ...,
-    })
-	
+	})
+
 	fmt.Println(err) // nil
 }
 ```

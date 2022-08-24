@@ -2,7 +2,6 @@ package aferocopy
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"runtime"
 	"strings"
@@ -39,7 +38,7 @@ func TestCopy(t *testing.T) {
 		err := Copy("resources/fixtures/data/case01/README.md", "resources/test/data.copy/case01/README.md")
 		assert.NoError(t, err)
 
-		content, err := ioutil.ReadFile("resources/test/data.copy/case01/README.md")
+		content, err := os.ReadFile("resources/test/data.copy/case01/README.md")
 
 		assert.NoError(t, err)
 		assert.Equal(t, "case01 - README.md", string(content))
@@ -214,7 +213,7 @@ func TestOptions_Skip(t *testing.T) {
 		err := Copy("resources/fixtures/data/case06", "resources/test/data.copy/case06.01", opt)
 		assert.Equal(t, errInsideSkipFunc, err)
 
-		files, err := ioutil.ReadDir("./resources/test/data.copy/case06.01")
+		files, err := os.ReadDir("./resources/test/data.copy/case06.01")
 		assert.NoError(t, err)
 		assert.Equal(t, 0, len(files))
 	})
@@ -297,7 +296,7 @@ func TestOptions_OnDirExists(t *testing.T) {
 		err = Copy("resources/fixtures/data/case10/src", "resources/test/data.copy/case10/dest.1", opt)
 		assert.NoError(t, err)
 
-		b, err := ioutil.ReadFile("resources/test/data.copy/case10/dest.1/" + "foo/" + "text_aaa")
+		b, err := os.ReadFile("resources/test/data.copy/case10/dest.1/" + "foo/" + "text_aaa")
 		assert.NoError(t, err)
 		assert.Equal(t, "This is text_aaa from src", string(b))
 
@@ -318,7 +317,7 @@ func TestOptions_OnDirExists(t *testing.T) {
 		err = Copy("resources/fixtures/data/case10/src", "resources/test/data.copy/case10/dest.2", opt)
 		assert.NoError(t, err)
 
-		b, err := ioutil.ReadFile("resources/test/data.copy/case10/dest.2/" + "foo/" + "text_aaa")
+		b, err := os.ReadFile("resources/test/data.copy/case10/dest.2/" + "foo/" + "text_aaa")
 		assert.NoError(t, err)
 		assert.Equal(t, "This is text_aaa from src", string(b))
 
@@ -336,7 +335,7 @@ func TestOptions_OnDirExists(t *testing.T) {
 		err := Copy("resources/fixtures/data/case10/src", "resources/test/data.copy/case10/dest.3", opt)
 		assert.NoError(t, err)
 
-		b, err := ioutil.ReadFile("resources/test/data.copy/case10/dest.3/" + "foo/" + "text_aaa")
+		b, err := os.ReadFile("resources/test/data.copy/case10/dest.3/" + "foo/" + "text_aaa")
 		assert.NoError(t, err)
 		assert.Equal(t, "This is text_aaa from dest", string(b))
 	})
@@ -362,7 +361,7 @@ func TestOptions_CopyBufferSize(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	content, err := ioutil.ReadFile("resources/test/data.copy/case12/README.md")
+	content, err := os.ReadFile("resources/test/data.copy/case12/README.md")
 
 	assert.NoError(t, err)
 	assert.Equal(t, "case12 - README.md", string(content))

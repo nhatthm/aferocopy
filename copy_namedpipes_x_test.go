@@ -6,8 +6,8 @@ package aferocopy
 import (
 	"testing"
 
-	"github.com/nhatthm/aferomock"
 	"github.com/stretchr/testify/assert"
+	"go.nhat.io/aferomock"
 )
 
 func TestCopyPipe_CouldNotMkdir(t *testing.T) {

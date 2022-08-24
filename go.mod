@@ -1,11 +1,11 @@
-module github.com/nhatthm/aferocopy
+module go.nhat.io/aferocopy/v2
 
 go 1.17
 
 require (
-	github.com/nhatthm/aferomock v0.3.1
 	github.com/spf13/afero v1.9.2
 	github.com/stretchr/testify v1.8.0
+	go.nhat.io/aferomock v0.4.0
 )
 
 require (

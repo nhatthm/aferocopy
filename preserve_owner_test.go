@@ -8,11 +8,11 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/nhatthm/aferomock"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.nhat.io/aferomock"
 )
 
 func TestPreserveOwner_statFail(t *testing.T) {

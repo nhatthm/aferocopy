@@ -15,3 +15,6 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+// v2.0.0 has a bug in permission control that does not apply correct permission to the copied files.
+retract v2.0.0

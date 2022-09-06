@@ -23,7 +23,7 @@ var (
 			orig := srcInfo.Mode()
 
 			if srcInfo.IsDir() {
-				if err := os.MkdirAll(dest, tmpPermissionForDirectory); err != nil {
+				if err := destFs.MkdirAll(dest, tmpPermissionForDirectory); err != nil {
 					return func(*error) {}, err
 				}
 			}
@@ -40,7 +40,7 @@ var (
 	// DoNothing do not touch the permission.
 	DoNothing = PermissionControlFunc(func(srcInfo os.FileInfo, destFs afero.Fs, dest string) (func(*error), error) {
 		if srcInfo.IsDir() {
-			if err := os.MkdirAll(dest, srcInfo.Mode()); err != nil {
+			if err := destFs.MkdirAll(dest, srcInfo.Mode()); err != nil {
 				return func(*error) {}, err
 			}
 		}

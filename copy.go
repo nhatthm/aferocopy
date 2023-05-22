@@ -74,8 +74,7 @@ func copyNextOrSkip(src, dest string, info os.FileInfo, opt Options) error {
 // copyFile is for just a file,
 // with considering existence of parent directory
 // and file permission.
-// nolint: cyclop
-func copyFile(src, dest string, info os.FileInfo, opt Options) (err error) {
+func copyFile(src, dest string, info os.FileInfo, opt Options) (err error) { //nolint: cyclop
 	srcFs := opt.SrcFs
 	destFs := opt.DestFs
 
@@ -169,8 +168,7 @@ func checkDir(srcDir, destDir string, opt Options) (exit bool, err error) {
 // copyDir is for a directory,
 // with scanning contents inside the directory
 // and pass everything to "copy" recursively.
-// nolint: cyclop
-func copyDir(srcDir, destDir string, info os.FileInfo, opt Options) (err error) {
+func copyDir(srcDir, destDir string, info os.FileInfo, opt Options) (err error) { //nolint: cyclop
 	srcFs := opt.SrcFs
 	destFs := opt.DestFs
 

@@ -86,7 +86,7 @@ func TestCopy(t *testing.T) {
 
 		assert.Equal(t, os.FileMode(0o555), info.Mode().Perm())
 
-		err = os.Chmod(dest, 0o755) // nolint: gosec
+		err = os.Chmod(dest, 0o755) //nolint: gosec
 		assert.NoError(t, err)
 	})
 }
@@ -241,10 +241,10 @@ func TestOptions_PermissionControl(t *testing.T) {
 	assert.Equal(t, os.FileMode(0o444|0o222), info.Mode())
 }
 
-// nolint: godox
 func TestOptions_Sync(t *testing.T) {
 	// With Sync option, each file will be flushed to storage on copying.
 	// TODO: Since it's a bit hard to simulate real usecases here. This testcase is nonsense.
+	//nolint: godox
 	opt := Options{Sync: true}
 	err := Copy("resources/fixtures/data/case08", "resources/test/data.copy/case08", opt)
 	assert.NoError(t, err)

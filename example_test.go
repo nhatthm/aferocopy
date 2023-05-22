@@ -12,7 +12,7 @@ func ExampleCopy() {
 	err := Copy("resources/fixtures/data/example", "resources/test/data.copy/example")
 	fmt.Println("Error:", err)
 
-	info, _ := os.Stat("resources/test/data.copy/example") // nolint: errcheck
+	info, _ := os.Stat("resources/test/data.copy/example") //nolint: errcheck
 	fmt.Println("IsDir:", info.IsDir())
 
 	// Output:

@@ -47,14 +47,14 @@ jobs:
 
       - name: Upload code coverage (unit)
         if: matrix.go-version == env.GO_LATEST_VERSION
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v3
         with:
           files: ./unit.coverprofile
           flags: unittests-${{ runner.os }}
 
 #      - name: Upload code coverage (features)
 #        if: matrix.go-version == env.GO_LATEST_VERSION
-#        uses: codecov/codecov-action@v4
+#        uses: codecov/codecov-action@v3
 #        with:
 #          files: ./features.coverprofile
 #          flags: featurestests-${{ runner.os }}

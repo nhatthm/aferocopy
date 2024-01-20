@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.nhat.io/aferomock"
 )
 
@@ -24,5 +24,5 @@ func TestCopyPipe_CouldNotMkdir(t *testing.T) {
 
 	expectedErr := `could not mkdir`
 
-	assert.EqualError(t, err, expectedErr)
+	require.EqualError(t, err, expectedErr)
 }

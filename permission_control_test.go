@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.nhat.io/aferomock"
 
 	"go.nhat.io/aferocopy/v2"
@@ -26,11 +26,11 @@ func TestPermissionControl_AddPermission_File(t *testing.T) {
 
 	// Set temporary permissions.
 	cb, err := aferocopy.AddPermission(0o321)(srcInfo, destFs, "foo.bar")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	// Set final permissions.
 	cb(&err)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestPermissionControl_AddPermission_Dir(t *testing.T) {
@@ -50,11 +50,11 @@ func TestPermissionControl_AddPermission_Dir(t *testing.T) {
 
 	// Set temporary permissions.
 	cb, err := aferocopy.AddPermission(0o321)(srcInfo, destFs, "foo")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	// Set final permissions.
 	cb(&err)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestPermissionControl_PreservePermission_File(t *testing.T) {
@@ -73,11 +73,11 @@ func TestPermissionControl_PreservePermission_File(t *testing.T) {
 
 	// Set temporary permissions.
 	cb, err := aferocopy.PreservePermission(srcInfo, destFs, "foo.bar")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	// Set final permissions.
 	cb(&err)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestPermissionControl_PreservePermission_Dir(t *testing.T) {
@@ -97,11 +97,11 @@ func TestPermissionControl_PreservePermission_Dir(t *testing.T) {
 
 	// Set temporary permissions.
 	cb, err := aferocopy.PreservePermission(srcInfo, destFs, "foo")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	// Set final permissions.
 	cb(&err)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestPermissionControl_DoNothing_File(t *testing.T) {
@@ -115,11 +115,11 @@ func TestPermissionControl_DoNothing_File(t *testing.T) {
 
 	// Set temporary permissions.
 	cb, err := aferocopy.DoNothing(srcInfo, destFs, "foo.bar")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	// Set final permissions.
 	cb(&err)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestPermissionControl_DoNothing_Dir(t *testing.T) {
@@ -138,9 +138,9 @@ func TestPermissionControl_DoNothing_Dir(t *testing.T) {
 
 	// Set temporary permissions.
 	cb, err := aferocopy.DoNothing(srcInfo, destFs, "foo")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	// Set final permissions
 	cb(&err)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }

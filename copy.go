@@ -79,12 +79,12 @@ func copyFile(src, dest string, info os.FileInfo, opt Options) (err error) { //n
 	destFs := opt.DestFs
 
 	if err = destFs.MkdirAll(filepath.Dir(dest), os.ModePerm); err != nil {
-		return
+		return err
 	}
 
 	f, err := destFs.Create(dest)
 	if err != nil {
-		return
+		return err
 	}
 
 	defer closeFile(f, &err)
@@ -98,7 +98,7 @@ func copyFile(src, dest string, info os.FileInfo, opt Options) (err error) { //n
 
 	s, err := srcFs.Open(src)
 	if err != nil {
-		return
+		return err
 	}
 
 	defer closeFile(s, &err)
@@ -186,7 +186,7 @@ func copyDir(srcDir, destDir string, info os.FileInfo, opt Options) (err error) 
 
 	contents, err := afero.ReadDir(srcFs, srcDir)
 	if err != nil {
-		return
+		return err
 	}
 
 	for _, content := range contents {
@@ -194,7 +194,7 @@ func copyDir(srcDir, destDir string, info os.FileInfo, opt Options) (err error) 
 
 		if err = copyNextOrSkip(cs, cd, content, opt); err != nil {
 			// If any error, exit immediately.
-			return
+			return err
 		}
 	}
 

@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestCopy_PathError(t *testing.T) {
@@ -16,7 +17,7 @@ func TestCopy_PathError(t *testing.T) {
 
 		err := Copy("resources/fixtures/data/case00", filepath.Join("resources/test/data/case00", dest))
 
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.IsType(t, &os.PathError{}, err)
 	})
 
@@ -27,14 +28,14 @@ func TestCopy_PathError(t *testing.T) {
 
 		err := Copy("resources/fixtures/data/case00", "/case00")
 
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.IsType(t, &os.PathError{}, err)
 	})
 
 	t.Run("try to create a directory on existing file name", func(t *testing.T) {
 		err := Copy("resources/fixtures/data/case02", "resources/test/data.copy/case00/README.md")
 
-		assert.Error(t, err)
+		require.Error(t, err)
 		assert.IsType(t, &os.PathError{}, err)
 	})
 }

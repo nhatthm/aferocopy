@@ -20,7 +20,7 @@ func TestCopyPipe_CouldNotMkdir(t *testing.T) {
 			Return(errors.New("could not mkdir"))
 	})(t)
 
-	err := copyPipe(fs, "/path/to/pipe", aferomock.NewFileInfo())
+	err := copyPipe(fs, "/path/to/pipe", aferomock.NopFileInfo(t))
 
 	expectedErr := `could not mkdir`
 

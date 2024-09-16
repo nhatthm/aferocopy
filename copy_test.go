@@ -170,7 +170,7 @@ func TestOptions_OnSymlink(t *testing.T) {
 }
 
 func TestOptions_Skip(t *testing.T) {
-	opt := Options{Skip: func(srcFs afero.Fs, src string) (bool, error) {
+	opt := Options{Skip: func(_ afero.Fs, src string) (bool, error) {
 		switch {
 		case strings.HasSuffix(src, "_skip"):
 			return true, nil
@@ -207,7 +207,7 @@ func TestOptions_Skip(t *testing.T) {
 
 	t.Run("if Skip func returns error, Copy should be interrupted", func(t *testing.T) {
 		errInsideSkipFunc := errors.New("something wrong inside Skip")
-		opt := Options{Skip: func(srcFs afero.Fs, src string) (bool, error) {
+		opt := Options{Skip: func(afero.Fs, string) (bool, error) {
 			return false, errInsideSkipFunc
 		}}
 		err := Copy("resources/fixtures/data/case06", "resources/test/data.copy/case06.01", opt)
@@ -285,7 +285,7 @@ func TestOptions_OnDirExists(t *testing.T) {
 
 	t.Run("replace", func(t *testing.T) {
 		opt := Options{
-			OnDirExists: func(srcFs afero.Fs, src string, destFs afero.Fs, dest string) DirExistsAction {
+			OnDirExists: func(afero.Fs, string, afero.Fs, string) DirExistsAction {
 				return Merge
 			},
 		}
@@ -307,7 +307,7 @@ func TestOptions_OnDirExists(t *testing.T) {
 
 	t.Run("replace", func(t *testing.T) {
 		opt := Options{
-			OnDirExists: func(srcFs afero.Fs, src string, destFs afero.Fs, dest string) DirExistsAction {
+			OnDirExists: func(afero.Fs, string, afero.Fs, string) DirExistsAction {
 				return Replace
 			},
 		}
@@ -328,7 +328,7 @@ func TestOptions_OnDirExists(t *testing.T) {
 
 	t.Run("untouchable", func(t *testing.T) {
 		opt := Options{
-			OnDirExists: func(srcFs afero.Fs, src string, destFs afero.Fs, dest string) DirExistsAction {
+			OnDirExists: func(afero.Fs, string, afero.Fs, string) DirExistsAction {
 				return Untouchable
 			},
 		}
@@ -342,7 +342,7 @@ func TestOptions_OnDirExists(t *testing.T) {
 
 	t.Run("PreserveTimes is true with Untouchable", func(t *testing.T) {
 		opt := Options{
-			OnDirExists: func(srcFs afero.Fs, src string, destFs afero.Fs, dest string) DirExistsAction {
+			OnDirExists: func(afero.Fs, string, afero.Fs, string) DirExistsAction {
 				return Untouchable
 			},
 			PreserveTimes: true,

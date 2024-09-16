@@ -25,10 +25,10 @@ func ExampleOptions() {
 		"resources/fixtures/data/example",
 		"resources/test/data.copy/example_with_options",
 		Options{
-			Skip: func(srcFs afero.Fs, src string) (bool, error) {
+			Skip: func(_ afero.Fs, src string) (bool, error) {
 				return strings.HasSuffix(src, ".git-like"), nil
 			},
-			OnSymlink: func(srcFs afero.Fs, src string) SymlinkAction {
+			OnSymlink: func(afero.Fs, string) SymlinkAction {
 				return Skip
 			},
 			PermissionControl: AddPermission(0o200),

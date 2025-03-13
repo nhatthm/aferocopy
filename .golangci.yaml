@@ -12,8 +12,6 @@ linters-settings:
     threshold: 100
   misspell:
     locale: US
-  unused:
-    check-exported: false
   unparam:
     check-exported: true
 
@@ -22,14 +20,11 @@ linters:
   disable:
     - copyloopvar
     - depguard
-    - execinquery
     - exhaustruct
-    - exportloopref
     - forbidigo
     - forcetypeassert
     - gci
     - gochecknoglobals
-    - gomnd
     - intrange
     - ireturn
     - lll
@@ -38,6 +33,7 @@ linters:
     - nolintlint # https://github.com/golangci/golangci-lint/issues/3063
     - paralleltest
     - tagliatelle
+    - tenv
     - testpackage
     - varnamelen
     - wrapcheck
@@ -50,7 +46,6 @@ issues:
         - err113
         - funlen
         - goconst
-        - goerr113
-        - gomnd
+        - mnd
         - noctx
       path: "_test.go"

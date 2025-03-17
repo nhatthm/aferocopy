@@ -3,9 +3,9 @@ module go.nhat.io/aferocopy/v2
 go 1.23.0
 
 require (
-	github.com/spf13/afero v1.12.0
+	github.com/spf13/afero v1.14.0
 	github.com/stretchr/testify v1.10.0
-	go.nhat.io/aferomock v0.7.0
+	go.nhat.io/aferomock v0.8.0
 )
 
 require (

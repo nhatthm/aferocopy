@@ -2,7 +2,7 @@ MODULE_NAME=aferocopy
 
 VENDOR_DIR = vendor
 
-GOLANGCI_LINT_VERSION ?= v1.64.7
+GOLANGCI_LINT_VERSION ?= v2.4.0
 
 GO ?= go
 GOLANGCI_LINT ?= $(shell go env GOPATH)/bin/golangci-lint-$(GOLANGCI_LINT_VERSION)
@@ -16,7 +16,7 @@ $(VENDOR_DIR):
 	@$(GO) mod tidy
 
 .PHONY: lint
-lint: $(GOLANGCI_LINT) $(VENDOR_DIR)
+lint: $(GOLANGCI_LINT)
 	@$(GOLANGCI_LINT) run -c .golangci.yaml
 
 .PHONY: test

@@ -37,7 +37,7 @@ func TestCopy_PathError(t *testing.T) {
 	})
 }
 
-func assertPathError(tb testing.TB, err error) bool {
+func assertPathError(tb testing.TB, err error) bool { //nolint: unparam
 	tb.Helper()
 
 	require.Error(tb, err)

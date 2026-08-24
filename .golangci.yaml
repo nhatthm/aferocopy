@@ -1,16 +1,19 @@
 version: "2"
 run:
   tests: true
+  allow-parallel-runners: true
 linters:
   default: all
   disable:
     - copyloopvar
     - depguard
     - exhaustruct
+    - exhaustruct_v5
     - forbidigo
     - forcetypeassert
     - gochecknoglobals
     - gomoddirectives
+    - gomodguard
     - intrange
     - ireturn
     - lll

@@ -17,8 +17,7 @@ func TestCopy_PathError(t *testing.T) {
 
 		err := Copy("resources/fixtures/data/case00", filepath.Join("resources/test/data/case00", dest))
 
-		require.Error(t, err)
-		assert.IsType(t, &os.PathError{}, err)
+		assertPathError(t, err)
 	})
 
 	t.Run("try to create not permitted location", func(t *testing.T) {
@@ -28,14 +27,22 @@ func TestCopy_PathError(t *testing.T) {
 
 		err := Copy("resources/fixtures/data/case00", "/case00")
 
-		require.Error(t, err)
-		assert.IsType(t, &os.PathError{}, err)
+		assertPathError(t, err)
 	})
 
 	t.Run("try to create a directory on existing file name", func(t *testing.T) {
 		err := Copy("resources/fixtures/data/case02", "resources/test/data.copy/case00/README.md")
 
-		require.Error(t, err)
-		assert.IsType(t, &os.PathError{}, err)
+		assertPathError(t, err)
 	})
+}
+
+func assertPathError(tb testing.TB, err error) bool { //nolint: unparam
+	tb.Helper()
+
+	require.Error(tb, err)
+
+	var pathErr *os.PathError
+
+	return !assert.ErrorAs(tb, err, &pathErr)
 }

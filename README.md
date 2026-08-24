@@ -3,7 +3,6 @@
 [![GitHub Releases](https://img.shields.io/github/v/release/nhatthm/aferocopy)](https://github.com/nhatthm/aferocopy/releases/latest)
 [![Build Status](https://github.com/nhatthm/aferocopy/actions/workflows/test.yaml/badge.svg)](https://github.com/nhatthm/aferocopy/actions/workflows/test.yaml)
 [![codecov](https://codecov.io/gh/nhatthm/aferocopy/branch/master/graph/badge.svg?token=eTdAgDE2vR)](https://codecov.io/gh/nhatthm/aferocopy)
-[![Go Report Card](https://goreportcard.com/badge/go.nhat.io/aferocopy/v2)](https://goreportcard.com/report/go.nhat.io/aferocopy/v2)
 [![GoDevDoc](https://img.shields.io/badge/dev-doc-00ADD8?logo=go)](https://pkg.go.dev/go.nhat.io/aferocopy/v2)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=PJZSGJN57TDJY)
 
@@ -13,7 +12,7 @@ The idea and logic is ported from [otiai10/copy](https://github.com/otiai10/copy
 
 ## Prerequisites
 
-- `Go >= 1.23`
+- `Go >= 1.25`
 
 ## Install
 

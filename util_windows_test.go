@@ -1,5 +1,4 @@
 //go:build windows
-// +build windows
 
 package aferocopy
 
@@ -16,7 +15,7 @@ func TestFileInfoStat(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
 		t.Parallel()
 
-		var input interface{} = &syscall.Win32FileAttributeData{}
+		var input any = &syscall.Win32FileAttributeData{}
 
 		actual := fileInfoStat(input)
 		expected := &syscall.Win32FileAttributeData{}

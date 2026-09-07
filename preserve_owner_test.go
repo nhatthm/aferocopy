@@ -18,7 +18,7 @@ func TestPreserveOwner_statFail(t *testing.T) {
 	t.Parallel()
 
 	srcFs := aferomock.MockFs(func(fs *aferomock.Fs) {
-		fs.On("Stat", mock.Anything).
+		fs.EXPECT().Stat(mock.Anything).
 			Return(nil, errors.New("stat error"))
 	})(t)
 
@@ -46,7 +46,7 @@ func TestPreserveOwner_chownSuccess(t *testing.T) {
 	expectedGID := int(stat.Gid)
 
 	destFs := aferomock.MockFs(func(fs *aferomock.Fs) {
-		fs.On("Chown", src, expectedUID, expectedGID).
+		fs.EXPECT().Chown(src, expectedUID, expectedGID).
 			Return(nil)
 	})(t)
 
@@ -59,7 +59,7 @@ func TestPreserveOwner_chownFail(t *testing.T) {
 	t.Parallel()
 
 	destFs := aferomock.MockFs(func(fs *aferomock.Fs) {
-		fs.On("Chown", mock.Anything, mock.Anything, mock.Anything).
+		fs.EXPECT().Chown(mock.Anything, mock.Anything, mock.Anything).
 			Return(errors.New("chown error"))
 	})(t)
 

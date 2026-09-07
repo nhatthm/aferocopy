@@ -16,12 +16,12 @@ func TestPermissionControl_AddPermission_File(t *testing.T) {
 	// Mocked file info and FS.
 	srcInfo := aferomock.MockFileInfo(func(fileInfo *aferomock.FileInfo) {
 		// Original permissions 0111
-		fileInfo.On("Mode").Return(os.FileMode(0o111))
-		fileInfo.On("IsDir").Return(false)
+		fileInfo.EXPECT().Mode().Return(os.FileMode(0o111))
+		fileInfo.EXPECT().IsDir().Return(false)
 	})(t)
 	destFs := aferomock.MockFs(func(fs *aferomock.Fs) {
 		// Expected original + new permissions.
-		fs.On("Chmod", "foo.bar", os.FileMode(0o111|0o321)).Return(nil)
+		fs.EXPECT().Chmod("foo.bar", os.FileMode(0o111|0o321)).Return(nil)
 	})(t)
 
 	// Set temporary permissions.
@@ -39,13 +39,13 @@ func TestPermissionControl_AddPermission_Dir(t *testing.T) {
 	// Mocked file info and FS.
 	srcInfo := aferomock.MockFileInfo(func(fileInfo *aferomock.FileInfo) {
 		// Original permissions 0111.
-		fileInfo.On("Mode").Return(os.FileMode(0o111))
-		fileInfo.On("IsDir").Return(true)
+		fileInfo.EXPECT().Mode().Return(os.FileMode(0o111))
+		fileInfo.EXPECT().IsDir().Return(true)
 	})(t)
 	destFs := aferomock.MockFs(func(fs *aferomock.Fs) {
 		// Expected original + new permissions
-		fs.On("MkdirAll", "foo", os.FileMode(0o755)).Return(nil)
-		fs.On("Chmod", "foo", os.FileMode(0o111|0o321)).Return(nil)
+		fs.EXPECT().MkdirAll("foo", os.FileMode(0o755)).Return(nil)
+		fs.EXPECT().Chmod("foo", os.FileMode(0o111|0o321)).Return(nil)
 	})(t)
 
 	// Set temporary permissions.
@@ -63,12 +63,12 @@ func TestPermissionControl_PreservePermission_File(t *testing.T) {
 	// Mocked file info and FS.
 	srcInfo := aferomock.MockFileInfo(func(fileInfo *aferomock.FileInfo) {
 		// Original permissions 0123.
-		fileInfo.On("Mode").Return(os.FileMode(0o123))
-		fileInfo.On("IsDir").Return(false)
+		fileInfo.EXPECT().Mode().Return(os.FileMode(0o123))
+		fileInfo.EXPECT().IsDir().Return(false)
 	})(t)
 	destFs := aferomock.MockFs(func(fs *aferomock.Fs) {
 		// Same permissions as original.
-		fs.On("Chmod", "foo.bar", os.FileMode(0o123)).Return(nil)
+		fs.EXPECT().Chmod("foo.bar", os.FileMode(0o123)).Return(nil)
 	})(t)
 
 	// Set temporary permissions.
@@ -86,13 +86,13 @@ func TestPermissionControl_PreservePermission_Dir(t *testing.T) {
 	// Mocked file info and FS.
 	srcInfo := aferomock.MockFileInfo(func(fileInfo *aferomock.FileInfo) {
 		// Original permissions 0123.
-		fileInfo.On("Mode").Return(os.FileMode(0o123))
-		fileInfo.On("IsDir").Return(true)
+		fileInfo.EXPECT().Mode().Return(os.FileMode(0o123))
+		fileInfo.EXPECT().IsDir().Return(true)
 	})(t)
 	destFs := aferomock.MockFs(func(fs *aferomock.Fs) {
 		// Same permissions as original.
-		fs.On("MkdirAll", "foo", os.FileMode(0o755)).Return(nil)
-		fs.On("Chmod", "foo", os.FileMode(0o123)).Return(nil)
+		fs.EXPECT().MkdirAll("foo", os.FileMode(0o755)).Return(nil)
+		fs.EXPECT().Chmod("foo", os.FileMode(0o123)).Return(nil)
 	})(t)
 
 	// Set temporary permissions.
@@ -109,7 +109,7 @@ func TestPermissionControl_DoNothing_File(t *testing.T) {
 
 	// Mocked file info and FS.
 	srcInfo := aferomock.MockFileInfo(func(fileInfo *aferomock.FileInfo) {
-		fileInfo.On("IsDir").Return(false)
+		fileInfo.EXPECT().IsDir().Return(false)
 	})(t)
 	destFs := aferomock.MockFs()(t)
 
@@ -128,12 +128,12 @@ func TestPermissionControl_DoNothing_Dir(t *testing.T) {
 	// Mocked file info and FS.
 	srcInfo := aferomock.MockFileInfo(func(fileInfo *aferomock.FileInfo) {
 		// Original permissions 0123.
-		fileInfo.On("Mode").Return(os.FileMode(0o123))
-		fileInfo.On("IsDir").Return(true)
+		fileInfo.EXPECT().Mode().Return(os.FileMode(0o123))
+		fileInfo.EXPECT().IsDir().Return(true)
 	})(t)
 	destFs := aferomock.MockFs(func(fs *aferomock.Fs) {
 		// Same permissions as original.
-		fs.On("MkdirAll", "foo", os.FileMode(0o123)).Return(nil)
+		fs.EXPECT().MkdirAll("foo", os.FileMode(0o123)).Return(nil)
 	})(t)
 
 	// Set temporary permissions.

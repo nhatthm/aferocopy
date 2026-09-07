@@ -15,7 +15,7 @@ func TestCopyPipe_CouldNotMkdir(t *testing.T) {
 	t.Parallel()
 
 	fs := aferomock.MockFs(func(fs *aferomock.Fs) {
-		fs.On("MkdirAll", "/path/to", os.ModePerm).
+		fs.EXPECT().MkdirAll("/path/to", os.ModePerm).
 			Return(errors.New("could not mkdir"))
 	})(t)
 

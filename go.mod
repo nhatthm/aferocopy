@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/spf13/afero v1.15.0
 	github.com/stretchr/testify v1.12.1
-	go.nhat.io/aferomock v0.9.0
+	go.nhat.io/aferomock v0.9.1
 )
 
 require (
